@@ -1,8 +1,6 @@
 # Kmeans::Crystal
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/kmeans/crystal`. To experiment with that code, run `bin/console` for an interactive prompt.
-
-TODO: Delete this and the text above, and describe your gem
+A k-means's implementation which allows you to monitor the process, being convergence or not.
 
 ## Installation
 
@@ -22,18 +20,36 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+require 'kmeans-crystal'
+require 'json'
 
-## Development
+data = [
+    {my_object: Object.new, features: [1, 3 ]},
+    {my_object: Object.new, features: [59, 51 ]},
+    {my_object: Object.new, features: [14, 13 ]},
+    {my_object: Object.new, features: [13, 3 ]},
+    {my_object: Object.new, features: [15, 325 ]},
+    {my_object: Object.new, features: [11, 32 ]},
+    {my_object: Object.new, features: [96, 77 ]},
+    {my_object: Object.new, features: [5, 28 ]}
+]
 
-After checking out the repo, run `bin/setup` to install dependencies. Then, run `bin/console` for an interactive prompt that will allow you to experiment.
 
-To install this gem onto your local machine, run `bundle exec rake install`. To release a new version, update the version number in `version.rb`, and then run `bundle exec rake release` to create a git tag for the version, push git commits and tags, and push the `.gem` file to [rubygems.org](https://rubygems.org).
+# Find 3 clusters in data
+k = 3
 
-## Contributing
+# Specify field which you want to evaluate. Default named features
+field_name = :features
 
-1. Fork it ( https://github.com/[my-github-username]/kmeans-crystal/fork )
-2. Create your feature branch (`git checkout -b my-new-feature`)
-3. Commit your changes (`git commit -am 'Add some feature'`)
-4. Push to the branch (`git push origin my-new-feature`)
-5. Create a new Pull Request
+mykmeans = KMeansCrystal::Model.new(3, data, field_name)
+mykmeans.train do |i, clusters|
+    puts clusters.to_json
+
+    # You can moniter whether convergence
+    # and specify conditions deciding how to finish training
+    break if i==10
+end
+
+puts mykmeans.result.to_json
+puts mykmeans.predict( {my_object: 'new_object', features: [14, 13 ]} )
+

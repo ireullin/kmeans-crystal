@@ -10,7 +10,7 @@ Gem::Specification.new do |spec|
   spec.date          = '2016-06-29'
   spec.homepage      = 'https://github.com/ireullin'
   spec.summary       = %q{A gem which implements k-means clustering algorithm.}
-  spec.description   = %q{An k-means's implementation which allows you to monitor the process, being convergence or not.}
+  spec.description   = %q{A k-means's implementation which allows you to monitor the process, being convergence or not.}
   spec.license       = "MIT"
   spec.files         = ['lib/kmeans-crystal.rb']
 end
