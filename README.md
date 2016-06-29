@@ -20,6 +20,9 @@ Or install it yourself as:
 
 ## Usage
 
+Simple example:
+
+```ruby
 require 'kmeans-crystal'
 require 'json'
 
@@ -52,4 +55,4 @@ end
 
 puts mykmeans.result.to_json
 puts mykmeans.predict( {my_object: 'new_object', features: [14, 13 ]} )
-
+```
