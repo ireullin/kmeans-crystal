@@ -4,6 +4,7 @@ There is a library for clustering data.
 It's implemented by k-means algorithm.
 With this library, You can monitor the training process of this model
 and decide when to finish it if the result is convergence.
+
 這是一個分群用的library.
 他實作k-means演算法.
 透過這個library你可以監看整個model訓練的過程,
