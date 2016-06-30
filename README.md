@@ -1,9 +1,8 @@
 # Kmeans::Crystal
 
-There is a library for clustering data.
-It's implemented by k-means algorithm.
-With this library, You can monitor the training process of this model
-and decide when to finish it if the result is convergence.
+The library for data clustering is implemented by k-means algorithm.
+With the library, you can monitor the model’s training process
+and end the training if the result is converged.
 
 這是一個分群用的library。
 他實作了k-means演算法。
@@ -47,11 +46,11 @@ data = [
 ]
 
 
-# Find 3 clusters in data.
+# Decide k of group of clustering data
 # 要分群的數量
 k = 3
 
-# Specify the field which you want to evaluate. Default named features.
+# The name of the column for evaluation is “features” by default.
 # 要用來計算的欄位名稱，預設名稱為features
 field_name = :features
 
@@ -59,8 +58,8 @@ mykmeans = KMeansCrystal::Model.new(k, data, field_name)
 mykmeans.train do |i, clusters|
     puts clusters.to_json
 
-    # Here you can moniter that data is convergence or not,
-    # and specify conditions deciding how to finish the model's training.
+    # You may monitor if the data is converged or not here.
+    # You can decide when to end the training of the model.
     # 你可以在這邊觀察資料是否收斂
     # 並且決定何時應該結束模型的訓練
     break if i==10
