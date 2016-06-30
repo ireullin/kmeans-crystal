@@ -2,7 +2,7 @@ module KMeansCrystal
 class Cluster
     attr_reader :centroid
     attr_reader :entries
-    attr_reader :name
+    attr_accessor :name
 
     def initialize(name, centroid, vector_name)
         @name = name
@@ -40,11 +40,12 @@ class Model
         @cluster_num = cluster_num
         @entries = entries
         @vector_name = vector_name
+
+        init_centroids = @entries.sample(@cluster_num).map{|x| x[@vector_name]}
+        @clusters = new_clusters(init_centroids)
     end
 
     def train
-        init_centroids = @entries.sample(@cluster_num).map{|x| x[@vector_name]}
-        @clusters = new_clusters(init_centroids)
         i = 0
         while true do
             @entries.each do |entry|
@@ -54,8 +55,7 @@ class Model
 
             yield(i+=1, @clusters.map{|x| x.output} )
 
-            new_centroids = get_new_centroids(@clusters)
-            @clusters = new_clusters(new_centroids)
+            @clusters = new_clusters_from_old(@clusters)
         end
     end
 
@@ -69,15 +69,16 @@ class Model
         return predicted_cluster.name
     end
 
-    private
-    def get_new_centroids(clusters)
-        centroids = Array.new
-        clusters.each do |cluster|
-            centroids << cluster.update_centroid
+    def rename_clusters
+        named_map = Hash.new
+        @clusters.each{|x| named_map[x.name] = x.name }
+        yield(named_map)
+        @clusters.each do |cluster|
+            cluster.name = named_map[cluster.name]
         end
-        return centroids
     end
 
+    private
     def get_min(centroids, entry)
         min_cluster = centroids[0]
         last_distance = centroids[0].distance(entry)
@@ -96,6 +97,14 @@ class Model
             clusters << Cluster.new("cluster#{i}", centroid, @vector_name)
         end
         return clusters
+    end
+
+    def new_clusters_from_old(clusters)
+        arr = Array.new
+        clusters.each do |cluster|
+            arr << Cluster.new(cluster.name, cluster.update_centroid, @vector_name)
+        end
+        return arr
     end
 end
 end
