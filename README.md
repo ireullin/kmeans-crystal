@@ -5,10 +5,10 @@ It's implemented by k-means algorithm.
 With this library, You can monitor the training process of this model
 and decide when to finish it if the result is convergence.
 
-這是一個分群用的library.
-他實作k-means演算法.
-透過這個library你可以監看整個model訓練的過程,
-並且在結果收斂的時候結束訓練
+這是一個分群用的library。
+他實作了k-means演算法。
+透過這個library你可以監看整個model訓練的過程，
+並且在結果收斂的時候結束訓練。
 
 
 ## Installation
@@ -52,7 +52,7 @@ data = [
 k = 3
 
 # Specify the field which you want to evaluate. Default named features.
-# 要用來計算的欄位名稱,預設名稱為features
+# 要用來計算的欄位名稱，預設名稱為features
 field_name = :features
 
 mykmeans = KMeansCrystal::Model.new(k, data, field_name)
