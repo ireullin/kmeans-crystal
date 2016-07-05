@@ -1,5 +1,4 @@
-# require 'kmeans-crystal'
-require './kmeans-crystal.rb'
+require 'kmeans-crystal'
 require 'json'
 
 data = [
@@ -24,7 +23,7 @@ field_name = :features
 
 mykmeans = KMeansCrystal::Model.new(k, data, field_name)
 mykmeans.train do |i, clusters|
-    puts clusters.to_json
+    puts JSON.pretty_generate(clusters)
 
     # Here you can moniter that data is convergence or not,
     # and specify conditions deciding how to finish the model's training.
@@ -33,7 +32,7 @@ mykmeans.train do |i, clusters|
     break if i==10
 end
 
-puts mykmeans.result.to_json
+puts JSON.pretty_generate(mykmeans.result)
 
 mykmeans.rename_clusters do |map|
     map['cluster0'] = 'mine'
@@ -41,16 +40,6 @@ mykmeans.rename_clusters do |map|
     map['cluster2'] = 'his'
 end
 
-mykmeans.train do |i, clusters|
-    puts clusters.to_json
-
-    # Here you can moniter that data is convergence or not,
-    # and specify conditions deciding how to finish the model's training.
-    # 你可以在這邊觀察資料是否收斂
-    # 並且決定何時應該結束模型的訓練
-    break if i==10
-end
-
-puts mykmeans.result.to_json
+puts JSON.pretty_generate(mykmeans.result)
 
 puts mykmeans.predict( {my_object: 'new_object', features: [14, 13, 6 ]} )
