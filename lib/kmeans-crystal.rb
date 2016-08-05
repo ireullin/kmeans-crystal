@@ -22,7 +22,9 @@ class Cluster
     end
 
     def update_centroid
-        new_centroid = Array.new(entries[0][@vector_name].size, 0.0)
+        new_centroid = Array.new(@centroid.size, 0.0)
+        return new_centroid if entries.size==0
+
         entries.each do |entry|
             entry[@vector_name].size.times do |i|
                 new_centroid[i] += entry[@vector_name][i]
