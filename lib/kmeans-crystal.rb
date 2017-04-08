@@ -49,7 +49,7 @@ class Model
         else
             @entries.sample(@cluster_num).map{|x| x[@vector_name]}
         end
-        puts "init_centroids=#{init_centroids.inspect}"
+
         @clusters = new_clusters(init_centroids)
     end
 
