@@ -54,7 +54,11 @@ k = 3
 # 要用來計算的欄位名稱,預設名稱為features
 field_name = :features
 
-mykmeans = KMeansCrystal::Model.new(k, data, field_name)
+# Use kmeans++ or random to initialize centroids
+# 是否使用kmeans++初始化中心點,若為false則亂數產生中心點
+ues_kmeans_pp = true
+
+mykmeans = KMeansCrystal::Model.new(k, data, ues_kmeans_pp, field_name)
 mykmeans.train do |i, clusters|
     puts JSON.pretty_generate(clusters)
 
