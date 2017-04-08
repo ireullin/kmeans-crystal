@@ -12,7 +12,8 @@ class Cluster
     end
 
     def output
-        return { name: @name, centroid: @centroid, entries: @entries }
+        output_entries = @entries.map{|e| e[:distance] = distance(e); e }
+        return { name: @name, centroid: @centroid, entries: output_entries }
     end
 
     def distance(entry)
