@@ -38,13 +38,43 @@ end
 
 
 class Model
-    def initialize(cluster_num, entries, vector_name = :features)
+
+    def kmeans_pp(entries, cluster_num)
+        features = entries.map{|x| x[@vector_name]}
+        dimension = features.first.size
+        init_val = Array.new(dimension){[0.0,0.0]}
+        dimension.times do |i|
+            init_val[i][0] = features.map{|f| f[i]}.to_a.min
+            init_val[i][1] = features.map{|f| f[i]}.to_a.max
+        end
+
+        init_centroids = entries.sample(cluster_num).map{|x| x[@vector_name]}
+        combination = 2**dimension
+        combination.times do |i|
+            offset = i.to_s(2).rjust(dimension,"0")
+            dimension.times do |d|
+                next if i >= init_centroids.size
+                max_or_min = offset[d].to_i
+                init_centroids[i][d] = init_val[d][max_or_min]
+            end
+        end
+
+        return init_centroids
+    end
+
+
+    def initialize(cluster_num, entries, kmeans_pp = true, vector_name = :features)
         raise 'too less cluster_num to evaluate k-means' if entries.size < cluster_num
         @cluster_num = cluster_num
         @entries = entries
         @vector_name = vector_name
 
-        init_centroids = @entries.sample(@cluster_num).map{|x| x[@vector_name]}
+        init_centroids = if kmeans_pp
+            kmeans_pp(@entries, @cluster_num)
+        else
+            @entries.sample(@cluster_num).map{|x| x[@vector_name]}
+        end
+
         @clusters = new_clusters(init_centroids)
     end
 
