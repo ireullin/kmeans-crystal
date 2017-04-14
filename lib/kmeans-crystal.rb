@@ -90,10 +90,6 @@ class Model
             raise 'incorrect value for init_centroids'
         end
 
-        p @vector_name
-        p @measure
-        p init_centroids
-
         @clusters = new_clusters(init_centroids)
     end
 
