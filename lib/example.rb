@@ -17,15 +17,17 @@ data = [
 # 要分群的數量
 k = 3
 
-# Specify the field which you want to evaluate. Default named features.
-# 要用來計算的欄位名稱,預設名稱為features
-field_name = :features
-
-# Use kmeans++ or random to initialize centroids
-# 是否使用kmeans++初始化中心點,若為false則亂數產生中心點
-ues_kmeans_pp = true
-
-mykmeans = KMeansCrystal::Model.new(k, data, ues_kmeans_pp, field_name)
+# Optional parameters 選擇性參數
+#
+# vector_name: Specify the field which you want to evaluate. Default named features.
+# vector_name: 要用來計算的欄位名稱, 預設名稱為features
+#
+# distance: How to measure distances? euclidean or manhattan. Default is euclidean.
+# distance: 如何計算點之間的距離, 可選擇euclidean或manhattan. 預設是 euclidean.
+#
+# init_centroids: How to initialize centroids? random or kmean++. Default is kmeans++.
+# init_centroids: 如何決定起始的質心, 可選擇random或是kmean++. 預設是 kmeans++.
+mykmeans = KMeansCrystal::Model.new(k, data, vector_name: :features, distance: 'euclidean', init_centroids: 'kmeans++')
 mykmeans.train do |i, clusters|
     puts JSON.pretty_generate(clusters)
 

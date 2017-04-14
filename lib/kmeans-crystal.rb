@@ -1,14 +1,37 @@
 module KMeansCrystal
+
+module Measure
+    # 歐式距離
+    class Euclidean
+        def self.distance(a,b)
+            sum = 0.0
+            a.size.times{|i| sum += (a[i] -b[i])**2 }
+            return Math.sqrt(sum)
+        end
+    end
+
+    # 曼哈頓距離
+    class Manhattan
+        def self.distance(a,b)
+            sum = 0.0
+            a.size.times{|i| sum += (a[i] -b[i]).abs }
+            return Math.sqrt(sum)
+        end
+    end
+end
+
+
 class Cluster
     attr_reader :centroid
     attr_reader :entries
     attr_accessor :name
 
-    def initialize(name, centroid, vector_name)
+    def initialize(name, centroid, vector_name, measure)
         @name = name
         @centroid = centroid
         @entries = Array.new
         @vector_name = vector_name
+        @measure = measure
     end
 
     def output
@@ -17,9 +40,7 @@ class Cluster
     end
 
     def distance(entry)
-        sum = 0.0
-        @centroid.size.times{|i| sum += (@centroid[i]-entry[@vector_name][i])**2}
-        return Math.sqrt(sum)
+        return @measure.distance(@centroid, entry[@vector_name])
     end
 
     def update_centroid
@@ -38,17 +59,40 @@ end
 
 
 class Model
-    def initialize(cluster_num, entries, ues_kmeans_pp = true, vector_name = :features)
+    def initialize(cluster_num, entries, **params)
         raise 'too less cluster_num to evaluate k-means' if entries.size < cluster_num
+
         @cluster_num = cluster_num
         @entries = entries
-        @vector_name = vector_name
 
-        init_centroids = if ues_kmeans_pp
+        @vector_name = case params[:vector_name]
+        when nil
+            :features
+        else
+            params[:vector_name]
+        end
+
+        @measure = case params[:distance]
+        when 'manhattan'
+            Measure::Manhattan
+        when 'euclidean',nil
+            Measure::Euclidean
+        else
+            raise 'incorrect value for distance'
+        end
+
+        init_centroids = case params[:init_centroids]
+        when 'random'
+            @entries.sample(@cluster_num).map{|x| x[@vector_name]}
+        when 'kmeans++',nil
             kmeans_pp(@entries, @cluster_num)
         else
-            @entries.sample(@cluster_num).map{|x| x[@vector_name]}
+            raise 'incorrect value for init_centroids'
         end
+
+        p @vector_name
+        p @measure
+        p init_centroids
 
         @clusters = new_clusters(init_centroids)
     end
@@ -102,7 +146,7 @@ class Model
     def new_clusters(centroids)
         clusters = Array.new
         centroids.each_with_index do |centroid, i|
-            clusters << Cluster.new("cluster#{i}", centroid, @vector_name)
+            clusters << Cluster.new("cluster#{i}", centroid, @vector_name, @measure)
         end
         return clusters
     end
@@ -110,7 +154,7 @@ class Model
     def new_clusters_from_old(clusters)
         arr = Array.new
         clusters.each do |cluster|
-            arr << Cluster.new(cluster.name, cluster.update_centroid, @vector_name)
+            arr << Cluster.new(cluster.name, cluster.update_centroid, @vector_name, @measure)
         end
         return arr
     end
@@ -127,14 +171,14 @@ class Model
         init_centroids = entries.sample(cluster_num).map{|x| x[@vector_name]}
         combination = 2**dimension
         combination.times do |i|
+            break if i >= init_centroids.size
             offset = i.to_s(2).rjust(dimension,"0")
             dimension.times do |d|
-                next if i >= init_centroids.size
                 max_or_min = offset[d].to_i
                 init_centroids[i][d] = init_val[d][max_or_min]
             end
-        end
 
+        end
         return init_centroids
     end
 end

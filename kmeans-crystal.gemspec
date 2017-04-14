@@ -4,10 +4,10 @@ $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 
 Gem::Specification.new do |spec|
   spec.name          = "kmeans-crystal"
-  spec.version       = '1.0.1'
+  spec.version       = '1.1.0'
   spec.authors       = ["ireullin"]
   spec.email         = ["ireullin@gmail.com"]
-  spec.date          = '2016-08-05'
+  spec.date          = '2017-04-14'
   spec.homepage      = 'https://github.com/ireullin/kmeans-crystal'
   spec.summary       = %Q{With this library, you can monitor the model’s training process and end the training if the result is converged.}
   spec.description   = %Q{The library for data clustering is implemented by k-means algorithm.With the library, you can monitor the model’s training processand end the training if the result is converged.
